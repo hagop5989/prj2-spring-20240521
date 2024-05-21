@@ -10,3 +10,7 @@ CREATE TABLE board
     inserted DATETIME      NOT NULL DEFAULT NOW()
 );
 
+SELECT *
+FROM board
+ORDER BY id DESC;
+
