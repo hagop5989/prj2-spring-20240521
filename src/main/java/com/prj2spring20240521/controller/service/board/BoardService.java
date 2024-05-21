@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(rollbackFor = Exception.class) // 모든 e 에 대해 rollback
 @RequiredArgsConstructor
@@ -28,5 +30,9 @@ public class BoardService {
             return false;
         }
         return true;
+    }
+
+    public List<Board> list() {
+        return mapper.selectAll();
     }
 }
