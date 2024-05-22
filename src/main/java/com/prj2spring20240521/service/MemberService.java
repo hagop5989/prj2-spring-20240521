@@ -3,6 +3,7 @@ package com.prj2spring20240521.service;
 import com.prj2spring20240521.domain.Member;
 import com.prj2spring20240521.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,9 +12,13 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberMapper mapper;
+    final MemberMapper mapper;
+    final BCryptPasswordEncoder passwordEncoder;
 
     public void add(Member member) {
+        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.setEmail(member.getEmail().trim());
+        member.setNickName(member.getNickName().trim());
         mapper.insert(member);
     }
 
