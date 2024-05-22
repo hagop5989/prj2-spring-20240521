@@ -64,4 +64,12 @@ public class MemberService {
         mapper.deleteById(id);
     }
 
+    public boolean hasAccess(Member member) {
+        Member dbMember = mapper.selectById(member.getId());
+        if (dbMember == null) {
+            return false;
+        }
+        return passwordEncoder.matches(member.getPassword(), dbMember.getPassword());
+        // 첫 번째 파라미터는 평문, 2번째 파라미터는 encoded 된 것 으로 하여 비교해 줌
+    }
 }
