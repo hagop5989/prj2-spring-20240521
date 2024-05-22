@@ -10,10 +10,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 public class MemberController {
-    MemberService service;
+    private final MemberService service;
 
     @PostMapping("signup")
     public void signup(@RequestBody Member member) {
+        service.add(member);
         System.out.println("member = " + member);
     }
 
@@ -27,7 +28,11 @@ public class MemberController {
     }
 
     @GetMapping(value = "check", params = "nickName")
-    public void checkNickName(@RequestParam("nickName") String nickName) {
-        System.out.println("nickName = " + nickName);
+    public ResponseEntity checkNickName(@RequestParam("nickName") String nickName) {
+        Member member = service.getByNickname(nickName);
+        if (member == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(nickName);
     }
 }

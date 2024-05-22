@@ -20,4 +20,9 @@ public class MemberService {
     public Member getByEmail(String email) {
         return mapper.selectByEmail(email);
     }
+
+    public Member getByNickname(String nickName) {
+        return mapper.selectByNickName(nickName);
+    }
+
 }

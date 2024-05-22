@@ -23,6 +23,7 @@ CREATE TABLE member
     inserted  DATETIME     NOT NULL DEFAULT NOW()
 );
 
+use prj2;
 SELECT *
 FROM member;
 
