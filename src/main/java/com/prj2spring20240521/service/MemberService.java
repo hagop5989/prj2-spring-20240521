@@ -55,4 +55,13 @@ public class MemberService {
     public List<Member> list() {
         return mapper.findAll();
     }
+
+    public Member getById(Integer id) {
+        return mapper.selectById(id);
+    }
+
+    public void remove(Integer id) {
+        mapper.deleteById(id);
+    }
+
 }

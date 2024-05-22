@@ -46,4 +46,20 @@ public class MemberController {
     public List<Member> list() {
         return service.list();
     }
+
+    @GetMapping("{id}")
+    public ResponseEntity get(@PathVariable Integer id) {
+        Member member = service.getById(id);
+        System.out.println("member = " + member);
+        if (member == null) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(member);
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public void remove(@PathVariable Integer id) {
+        service.remove(id);
+    }
 }
