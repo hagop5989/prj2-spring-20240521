@@ -1,6 +1,6 @@
-package com.prj2spring20240521.controller.service.mapper.board;
+package com.prj2spring20240521.mapper.board;
 
-import com.prj2spring20240521.controller.domain.board.Board;
+import com.prj2spring20240521.domain.Board;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

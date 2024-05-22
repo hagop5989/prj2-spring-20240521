@@ -1,7 +1,7 @@
-package com.prj2spring20240521.controller.service.board;
+package com.prj2spring20240521.service.board;
 
-import com.prj2spring20240521.controller.domain.board.Board;
-import com.prj2spring20240521.controller.service.mapper.board.BoardMapper;
+import com.prj2spring20240521.domain.Board;
+import com.prj2spring20240521.mapper.board.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

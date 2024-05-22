@@ -1,7 +1,7 @@
 package com.prj2spring20240521.controller.board;
 
-import com.prj2spring20240521.controller.domain.board.Board;
-import com.prj2spring20240521.controller.service.board.BoardService;
+import com.prj2spring20240521.domain.Board;
+import com.prj2spring20240521.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
