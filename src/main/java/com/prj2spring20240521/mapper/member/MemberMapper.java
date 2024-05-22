@@ -38,7 +38,7 @@ public interface MemberMapper {
     List<Member> findAll();
 
     @Select("""
-            SELECT id,email, nick_Name, inserted
+            SELECT id,email,password, nick_Name, inserted
             FROM member
             WHERE id = #{id}
             """)
