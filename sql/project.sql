@@ -24,6 +24,8 @@ CREATE TABLE member
 );
 
 use prj2;
+
 SELECT *
 FROM member;
 
+DESC member;
