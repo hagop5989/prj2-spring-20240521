@@ -63,4 +63,19 @@ DELETE
 FROM member
 WHERE id = 12;
 
+# 권한 테이블
+CREATE TABLE authority
+(
+    member_id INT         NOT NULL REFERENCES member (id),
+    name      VARCHAR(20) NOT NULL,
+    PRIMARY KEY (member_id, name)
+);
+
+SELECT *
+FROM member
+         JOIN authority a on member.id = a.member_id;
+
+INSERT INTO authority (member_id, name)
+VALUES (25, 'admin');
+
 

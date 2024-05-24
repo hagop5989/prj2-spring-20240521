@@ -16,6 +16,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -38,7 +39,7 @@ public class MemberService {
         return mapper.selectByEmail(email);
     }
 
-    public Member getByNickname(String nickName) {
+    public Member getByNickName(String nickName) {
         return mapper.selectByNickName(nickName);
     }
 
@@ -102,7 +103,11 @@ public class MemberService {
         mapper.update(member);
     }
 
-    public boolean hasAccessModify(Member member) {
+    public boolean hasAccessModify(Member member, Authentication authentication) {
+        if (!authentication.getName().equals(member.getId().toString())) {
+            return false;
+        }
+
         Member dbMember = mapper.selectById(member.getId());
         if (dbMember == null) {
             return false;
@@ -126,12 +131,17 @@ public class MemberService {
                 String token = "";
                 Instant now = Instant.now();
 
+                List<String> authority = mapper.selectAuthorityByMemberId(db.getId());
+
+                String authorityString = authority.stream()
+                        .collect(Collectors.joining(" "));
+
                 JwtClaimsSet claims = JwtClaimsSet.builder()
                         .issuer("self")
                         .issuedAt(now)
                         .expiresAt(now.plusSeconds(60 * 60 * 24 * 7))
                         .subject(db.getId().toString())
-                        .claim("scope", "") // 권한
+                        .claim("scope", authorityString) // 권한
                         .claim("nickName", db.getNickName())
                         .build();
 

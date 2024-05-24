@@ -16,7 +16,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 public class MemberController {
-    private final MemberService service;
+
+    final MemberService service;
 
     @PostMapping("signup")
     public ResponseEntity signup(@RequestBody Member member) {
@@ -39,7 +40,7 @@ public class MemberController {
 
     @GetMapping(value = "check", params = "nickName")
     public ResponseEntity checkNickName(@RequestParam("nickName") String nickName) {
-        Member member = service.getByNickname(nickName);
+        Member member = service.getByNickName(nickName);
         if (member == null) {
             return ResponseEntity.notFound().build();
         }
@@ -47,12 +48,13 @@ public class MemberController {
     }
 
     @GetMapping("list")
+    @PreAuthorize("hasAnyAuthority('SCOPE_admin')")
     public List<Member> list() {
         return service.list();
     }
 
     @GetMapping("{id}")
-    @PreAuthorize("isAuthenticated()") // 로그인 되어야 함
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity get(@PathVariable Integer id,
                               Authentication authentication) {
         if (!service.hasAccess(id, authentication)) {
@@ -60,7 +62,6 @@ public class MemberController {
         }
 
         Member member = service.getById(id);
-        System.out.println("member = " + member);
         if (member == null) {
             return ResponseEntity.notFound().build();
         } else {
@@ -70,21 +71,22 @@ public class MemberController {
 
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity delete(@RequestBody Member member, // 넘어오는 객체로 security 가 만들어 줌
-                                 Authentication authentication) {
+    public ResponseEntity delete(
+            @RequestBody Member member,
+            Authentication authentication) {
         if (service.hasAccess(member, authentication)) {
             service.remove(member.getId());
             return ResponseEntity.ok().build();
         }
 
-        // todo: forbidden으로 수정하기
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        // 남의 것 지울 때 403 응답.
     }
 
     @PutMapping("modify")
-    public ResponseEntity modify(@RequestBody Member member) {
-        if (service.hasAccessModify(member)) {
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity modify(@RequestBody Member member,
+                                 Authentication authentication) {
+        if (service.hasAccessModify(member, authentication)) {
             service.modify(member);
             return ResponseEntity.ok().build();
         } else {
@@ -95,11 +97,11 @@ public class MemberController {
     @PostMapping("token")
     public ResponseEntity token(@RequestBody Member member) {
         Map<String, Object> map = service.getToken(member);
+
         if (map == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
         return ResponseEntity.ok(map);
     }
-
 }

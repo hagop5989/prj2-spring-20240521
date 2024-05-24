@@ -55,4 +55,11 @@ public interface MemberMapper {
             WHERE id = #{id}
             """)
     int update(Member member);
+
+    @Select("""
+            SELECT name
+            FROM authority
+            WHERE member_id = #{member_id}
+            """)
+    List<String> selectAuthorityByMemberId(Integer member_id);
 }
