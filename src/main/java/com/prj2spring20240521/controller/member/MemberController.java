@@ -52,7 +52,13 @@ public class MemberController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity get(@PathVariable Integer id) {
+    @PreAuthorize("isAuthenticated()") // 로그인 되어야 함
+    public ResponseEntity get(@PathVariable Integer id,
+                              Authentication authentication) {
+        if (!service.hasAccess(id, authentication)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
         Member member = service.getById(id);
         System.out.println("member = " + member);
         if (member == null) {
