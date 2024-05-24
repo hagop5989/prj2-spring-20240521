@@ -48,4 +48,19 @@ ALTER TABLE board
 DESC board;
 
 SELECT *
-FROM board;
+FROM board
+ORDER BY id DESC;
+
+SELECT *
+FROM member
+WHERE email = 'ww@ww';
+
+DELETE
+FROM member
+WHERE email = 'ww@ww';
+
+DELETE
+FROM member
+WHERE id = 12;
+
+
