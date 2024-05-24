@@ -22,6 +22,7 @@ public class BoardController {
     public ResponseEntity add(
             Authentication authentication,
             @RequestBody Board board) {
+
         if (service.validate(board)) {
             service.add(board, authentication);
             return ResponseEntity.ok().build();
