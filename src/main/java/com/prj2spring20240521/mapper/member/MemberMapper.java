@@ -29,10 +29,14 @@ public interface MemberMapper {
     Member selectByNickName(String nickName);
 
     @Select("""
-            SELECT id,email, nick_Name, inserted
+            SELECT id,
+                   email,
+                   nick_name,
+                   inserted
             FROM member
+            ORDER BY id ASC 
             """)
-    List<Member> findAll();
+    List<Member> selectAll();
 
     @Select("""
             SELECT id,email,password, nick_Name, inserted
