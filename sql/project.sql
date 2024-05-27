@@ -86,6 +86,8 @@ INSERT INTO board
 SELECT title, content, member_id
 FROM board;
 
+DESC board;
+
 SELECT COUNT(*)
 FROM board;
 

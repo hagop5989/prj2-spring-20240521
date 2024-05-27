@@ -66,4 +66,10 @@ public interface BoardMapper {
             """)
 //    offset -> ~부터 10개
     List<Board> selectAllPaging(Integer offset);
+
+    @Select("""
+            SELECT COUNT(*)
+            FROM board
+            """)
+    Integer countAll();
 }
