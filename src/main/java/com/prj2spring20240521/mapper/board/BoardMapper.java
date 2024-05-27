@@ -54,4 +54,16 @@ public interface BoardMapper {
             WHERE member_id=#{memberId}
             """)
     int deleteByMemberId(Integer memberId);
+
+    @Select("""
+            SELECT
+            b.id,
+            b.title,
+            m.nick_name writer
+            FROM board b JOIN member m ON m.id = b.member_id
+            ORDER BY id DESC
+            LIMIT #{offset}, 10
+            """)
+//    offset -> ~부터 10개
+    List<Board> selectAllPaging(Integer offset);
 }
