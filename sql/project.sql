@@ -98,3 +98,36 @@ FROM board;
 
 
 DESC board;
+
+SELECT *
+FROM member;
+
+UPDATE member
+SET nick_name = 'abcdd'
+WHERE id = 31;
+UPDATE member
+SET nick_name = 'efgh'
+WHERE id = 30;
+
+UPDATE board
+SET board.member_id = 31
+WHERE id % 2 = 0;
+
+UPDATE board
+SET board.member_id = 30
+WHERE id % 2 = 1;
+
+UPDATE board
+SET title   = 'abc def',
+    content = 'ghi jkl'
+WHERE id % 3 = 0;
+
+UPDATE board
+SET title   = 'mno pqr',
+    content = 'stu vwx'
+WHERE id % 3 = 1;
+
+UPDATE board
+SET title   = 'yz1 234',
+    content = '567 890'
+WHERE id % 3 = 2;
