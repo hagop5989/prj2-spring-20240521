@@ -1,6 +1,6 @@
 package com.prj2spring20240521.mapper.board;
 
-import com.prj2spring20240521.domain.Board;
+import com.prj2spring20240521.domain.board.Board;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -125,4 +125,17 @@ public interface BoardMapper {
             """)
     List<String> selectFileNameByBoardId(Integer boardId);
 
+    @Delete("""
+            DELETE FROM board_file
+            WHERE board_id = #{boardId}
+            """)
+    int deleteFileByBoardId(Integer boardId);
+
+
+    @Select("""
+            SELECT id
+            FROM board
+            WHERE member_id = #{memberId}
+            """)
+    List<Board> selectByMemberId(Integer memberId);
 }

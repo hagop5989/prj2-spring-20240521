@@ -1,4 +1,4 @@
-package com.prj2spring20240521.domain;
+package com.prj2spring20240521.domain.member;
 
 import lombok.Data;
 

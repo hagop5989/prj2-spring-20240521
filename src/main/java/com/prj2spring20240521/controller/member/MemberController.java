@@ -1,6 +1,6 @@
 package com.prj2spring20240521.controller.member;
 
-import com.prj2spring20240521.domain.Member;
+import com.prj2spring20240521.domain.member.Member;
 import com.prj2spring20240521.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

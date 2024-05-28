@@ -1,6 +1,6 @@
 package com.prj2spring20240521.mapper.member;
 
-import com.prj2spring20240521.domain.Member;
+import com.prj2spring20240521.domain.member.Member;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;

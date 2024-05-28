@@ -1,6 +1,6 @@
 package com.prj2spring20240521.service.board;
 
-import com.prj2spring20240521.domain.Board;
+import com.prj2spring20240521.domain.board.Board;
 import com.prj2spring20240521.mapper.board.BoardMapper;
 import com.prj2spring20240521.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
@@ -105,7 +105,23 @@ public class BoardService {
     }
 
     public void remove(Integer id) {
+        // file 명 조회
+        List<String> fileNames = mapper.selectFileNameByBoardId(id);
 
+        // disk 에 있는 file
+        String dir = STR."C:/Temp/prj2/\{id}/";
+        for (String fileName : fileNames) {
+            File file = new File(dir + fileName);
+            file.delete();
+        }
+        File dirFile = new File(dir);
+        if (dirFile.exists()) {
+            dirFile.delete();
+        }
+        // board_file
+        mapper.deleteFileByBoardId(id);
+
+        // board
         mapper.deleteById(id);
     }
 

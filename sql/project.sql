@@ -159,3 +159,26 @@ ALTER TABLE board_file
 
 
 
+SELECT rc.CONSTRAINT_NAME,
+       kcu.TABLE_NAME,
+       kcu.COLUMN_NAME,
+       kcu.REFERENCED_TABLE_NAME,
+       kcu.REFERENCED_COLUMN_NAME,
+       rc.UPDATE_RULE,
+       rc.DELETE_RULE
+FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS rc
+         JOIN
+     INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
+     ON
+         rc.CONSTRAINT_NAME = kcu.CONSTRAINT_NAME
+             AND rc.CONSTRAINT_SCHEMA = kcu.TABLE_SCHEMA
+WHERE kcu.TABLE_NAME = 'board_file'
+  AND kcu.TABLE_SCHEMA = 'prj2'; -- 'your_database_name'을 실제 데이터베이스 이름으로 변경
+
+ALTER TABLE board_file
+    DROP FOREIGN KEY fk_board;
+
+ALTER TABLE board_file
+    ADD CONSTRAINT board_file_ibfk_1
+        FOREIGN KEY (board_id) REFERENCES board (id)
+            ON DELETE RESTRICT;

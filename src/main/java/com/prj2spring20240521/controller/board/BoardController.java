@@ -1,6 +1,6 @@
 package com.prj2spring20240521.controller.board;
 
-import com.prj2spring20240521.domain.Board;
+import com.prj2spring20240521.domain.board.Board;
 import com.prj2spring20240521.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
