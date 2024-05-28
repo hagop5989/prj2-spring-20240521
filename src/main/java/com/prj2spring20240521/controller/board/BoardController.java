@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -74,8 +75,12 @@ public class BoardController {
 
     @PutMapping("edit")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity edit(@RequestBody Board board,
+    public ResponseEntity edit(Board board,
+                               @RequestParam(value = "removeFileList[]", required = false)
+                               List<String> removeFileList,
                                Authentication authentication) {
+
+
         if (!service.hasAccess(board.getId(), authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } // 권한 없으면 FORBIDDEN
