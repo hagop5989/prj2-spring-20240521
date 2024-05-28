@@ -25,17 +25,16 @@ public class BoardService {
 
     public void add(Board board, MultipartFile[] files, Authentication authentication) throws IOException {
         board.setMemberId(Integer.valueOf(authentication.getName()));
-
         // 게시물 저장
         mapper.insert(board);
 
-        // db 해당 게시물의 파일 목록 저장
         if (files != null) {
             for (MultipartFile file : files) {
+                // db에 해당 게시물의 파일 목록 저장
                 mapper.insertFileName(board.getId(), file.getOriginalFilename());
                 // 실제 파일 저장
                 // 부모 디렉토리 만들기
-                String dir = STR."C:/Temp/prj2/\{board.getId()}"; /* 폴더 만드는 코드*/
+                String dir = STR."C:/Temp/prj2/\{board.getId()}";
                 File dirFile = new File(dir);
                 if (!dirFile.exists()) {
                     dirFile.mkdirs();
@@ -77,7 +76,7 @@ public class BoardService {
         Integer prevPageNumber = leftPageNumber - 1;
         Integer nextPageNumber = rightPageNumber + 1;
 
-
+        //  이전,처음,다음,맨끝 버튼 만들기
         if (prevPageNumber > 0) {
             pageInfo.put("prevPageNumber", prevPageNumber);
         }
@@ -96,12 +95,13 @@ public class BoardService {
     public Board get(Integer id) {
         Board board = mapper.selectById(id);
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
-        //http://172.30.1.58:8888//{id}/{name}
+        // http://172.30.1.57:8888/{id}/{name}
         List<BoardFile> files = fileNames.stream()
                 .map(name -> new BoardFile(name, STR."http://172.30.1.58:8888/\{id}/\{name}"))
                 .toList();
+
         board.setFileList(files);
-        //
+
         return board;
     }
 
@@ -119,6 +119,7 @@ public class BoardService {
         if (dirFile.exists()) {
             dirFile.delete();
         }
+
         // board_file
         mapper.deleteFileByBoardId(id);
 
@@ -126,16 +127,34 @@ public class BoardService {
         mapper.deleteById(id);
     }
 
-    public void edit(Board board, List<String> removeFileList) {
-        // disk 에 있는 파일 삭제
+    public void edit(Board board, List<String> removeFileList, MultipartFile[] addFileList) throws IOException {
         if (removeFileList != null && removeFileList.size() > 0) {
             for (String fileName : removeFileList) {
+                // disk의 파일 삭제
                 String path = STR."C:/Temp/prj2/\{board.getId()}/\{fileName}";
                 File file = new File(path);
                 file.delete();
-
                 // db records 삭제
                 mapper.deleteFileByBoardIdAndName(board.getId(), fileName);
+            }
+        }
+
+        if (addFileList != null && addFileList.length > 0) {
+            List<String> fileNameList = mapper.selectFileNameByBoardId(board.getId());
+            for (MultipartFile file : addFileList) {
+                String fileName = file.getOriginalFilename();
+                if (!fileNameList.contains(fileName)) {
+                    // 새 파일이 기존에 없을 때만 db에 추가
+                    mapper.insertFileName(board.getId(), fileName);
+                }
+                // disk 에 쓰기
+                File dir = new File(STR."C:/Temp/prj2/\{board.getId()}");
+                if (!dir.exists()) {
+                    dir.mkdirs();
+                }
+                String path = STR."C:/Temp/prj2/\{board.getId()}/\{fileName}";
+                File destination = new File(path);
+                file.transferTo(destination);
             }
         }
 

@@ -28,12 +28,6 @@ public class BoardController {
             Board board,
             @RequestParam(value = "files[]", required = false) MultipartFile[] files) throws IOException {
 
-        if (files != null) {
-            System.out.println("files = " + files.length);
-            for (MultipartFile file : files) {
-                System.out.println("file.getOriginalFilename() = " + file.getOriginalFilename());
-            }
-        }
         if (service.validate(board)) {
             service.add(board, files, authentication);
             return ResponseEntity.ok().build();
@@ -43,9 +37,10 @@ public class BoardController {
     }
 
     @GetMapping("list")
-    public Map<String, Object> list(@RequestParam(defaultValue = "1") Integer page,
-                                    @RequestParam(value = "type", required = false) String searchType,
-                                    @RequestParam(value = "keyword", defaultValue = "") String keyword) {
+    public Map<String, Object> list(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(value = "type", required = false) String searchType,
+            @RequestParam(value = "keyword", defaultValue = "") String keyword) {
         return service.list(page, searchType, keyword);
     }
 
@@ -64,8 +59,8 @@ public class BoardController {
 
     @DeleteMapping("{id}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity delete(@PathVariable Integer id,
-                                 Authentication authentication) {
+    public ResponseEntity delete(@PathVariable Integer id
+            , Authentication authentication) {
         if (service.hasAccess(id, authentication)) {
             service.remove(id);
             return ResponseEntity.ok().build();
@@ -78,21 +73,19 @@ public class BoardController {
     public ResponseEntity edit(Board board,
                                @RequestParam(value = "removeFileList[]", required = false)
                                List<String> removeFileList,
-                               Authentication authentication) {
-
+                               @RequestParam(value = "addFileList[]", required = false)
+                               MultipartFile[] addFileList,
+                               Authentication authentication) throws IOException {
 
         if (!service.hasAccess(board.getId(), authentication)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } // 권한 없으면 FORBIDDEN
-
+        }
 
         if (service.validate(board)) {
-            service.edit(board, removeFileList);
+            service.edit(board, removeFileList, addFileList);
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.badRequest().build();
         }
     }
-
-
 }
