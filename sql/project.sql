@@ -146,3 +146,16 @@ DESC board_file;
 
 SELECT *
 FROM board_file;
+
+DESC board_file;
+
+ALTER TABLE board_file
+    DROP CONSTRAINT prj2.board_file.board_file_ibfk_1;
+
+ALTER TABLE board_file
+    ADD CONSTRAINT fk_board
+        FOREIGN KEY (board_id) REFERENCES board (id)
+            ON DELETE CASCADE;
+
+
+
