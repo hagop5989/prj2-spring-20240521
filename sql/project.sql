@@ -131,3 +131,18 @@ UPDATE board
 SET title   = 'yz1 234',
     content = '567 890'
 WHERE id % 3 = 2;
+
+USE prj2;
+DESC board;
+
+CREATE TABLE board_file
+(
+    board_id INT          NOT NULL REFERENCES board (id),
+    name     VARCHAR(500) NOT NULL,
+    PRIMARY KEY (board_id, name)
+);
+
+DESC board_file;
+
+SELECT *
+FROM board_file;
