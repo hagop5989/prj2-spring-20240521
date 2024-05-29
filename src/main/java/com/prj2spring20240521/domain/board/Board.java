@@ -17,4 +17,7 @@ public class Board {
     private Integer numberOfImages;
     private List<BoardFile> fileList;
 
+    private boolean like;
+    private Integer count;
+
 }

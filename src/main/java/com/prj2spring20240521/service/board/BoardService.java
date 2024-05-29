@@ -103,16 +103,29 @@ public class BoardService {
                 "boardList", mapper.selectAllPaging(offset, searchType, keyword));
     }
 
-    public Board get(Integer id) {
+    public Map<String, Object> get(Integer id, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+
         Board board = mapper.selectById(id);
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
         List<BoardFile> files = fileNames.stream()
                 .map(name -> new BoardFile(name, STR."\{srcPrefix}\{id}/\{name}"))
                 .toList();
-
         board.setFileList(files);
 
-        return board;
+        Map<String, Object> like = new HashMap<>();
+        if (authentication == null) {
+            like.put("like", false);
+        } else {
+            String memberId = authentication.getName();
+            int c = mapper.selectLikeByBoardIdAndMemberId(id, memberId);
+            like.put("like", c == 1);
+        }
+        like.put("count", mapper.selectCountLikeByBoardId(id));
+        result.put("board", board);
+        result.put("like", like);
+
+        return result;
     }
 
     public void remove(Integer id) {
@@ -187,7 +200,9 @@ public class BoardService {
                 .equals(Integer.valueOf(authentication.getName()));
     }
 
-    public void like(Map<String, Object> req, Authentication authentication) {
+    public Map<String, Object> like(Map<String, Object> req, Authentication authentication) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("like", false);
         Integer boardId = (Integer) req.get("boardId");
         Integer memberId = Integer.valueOf(authentication.getName());
 
@@ -197,8 +212,9 @@ public class BoardService {
         // 안 했으면 추가
         if (count == 0) {
             mapper.insertLikeByBoardIdAndMemberId(boardId, memberId);
+            result.put("like", true);
         }
-
-        
+        result.put("count", mapper.selectCountLikeByBoardId(boardId));
+        return result;
     }
 }

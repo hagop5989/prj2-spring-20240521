@@ -200,4 +200,5 @@ CREATE TABLE board_like
 );
 
 SELECT *
-FROM board_like;
+FROM board_like
+WHERE board_id = 1;
