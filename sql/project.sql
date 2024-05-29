@@ -182,3 +182,11 @@ ALTER TABLE board_file
     ADD CONSTRAINT board_file_ibfk_1
         FOREIGN KEY (board_id) REFERENCES board (id)
             ON DELETE RESTRICT;
+
+SELECT *
+FROM board_file
+ORDER BY board_id DESC;
+
+DELETE
+FROM board_file
+WHERE name = 'rrr.png';
