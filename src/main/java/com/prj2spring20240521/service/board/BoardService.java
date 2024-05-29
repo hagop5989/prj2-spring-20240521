@@ -199,5 +199,6 @@ public class BoardService {
             mapper.insertLikeByBoardIdAndMemberId(boardId, memberId);
         }
 
+        
     }
 }

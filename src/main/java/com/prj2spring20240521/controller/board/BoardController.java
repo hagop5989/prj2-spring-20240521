@@ -94,6 +94,6 @@ public class BoardController {
     public void like(@RequestBody Map<String, Object> req,
                      Authentication authentication) {
         service.like(req, authentication);
-
+        
     }
 }
