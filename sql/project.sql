@@ -190,3 +190,14 @@ ORDER BY board_id DESC;
 DELETE
 FROM board_file
 WHERE name = 'rrr.png';
+
+# board_like 만들기
+CREATE TABLE board_like
+(
+    board_id  INT NOT NULL REFERENCES board (id),
+    member_id INT NOT NULL REFERENCES member (id),
+    PRIMARY KEY (board_id, member_id)
+);
+
+SELECT *
+FROM board_like;
