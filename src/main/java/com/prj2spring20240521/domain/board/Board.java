@@ -21,6 +21,6 @@ public class Board {
     private boolean like;
     private Integer count;
 
-    private Integer commentNum;
+    private Integer numberOfComments;
 
 }

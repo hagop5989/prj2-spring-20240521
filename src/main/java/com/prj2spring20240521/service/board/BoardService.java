@@ -105,7 +105,7 @@ public class BoardService {
             int numOfComment = commentMapper.selectAllByBoardId(board.getId()).size();
             System.out.println("board.getId() = " + board.getId());
             System.out.println("numOfComment = " + numOfComment);
-            board.setCommentNum(numOfComment);
+            board.setNumberOfComments(numOfComment);
         }
 
 

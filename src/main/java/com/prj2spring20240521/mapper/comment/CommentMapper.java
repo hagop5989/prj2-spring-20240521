@@ -1,6 +1,7 @@
 package com.prj2spring20240521.mapper.comment;
 
 import com.prj2spring20240521.domain.comment.Comment;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -19,11 +20,20 @@ public interface CommentMapper {
     int insert(Comment comment);
 
     @Select("""
-            SELECT *
-            FROM comment
-            JOIN member m ON m.id = comment.member_id
+            SELECT c.id,
+                   c.comment,
+                   c.inserted,
+                   m.nick_name
+            FROM comment c JOIN member m ON c.member_id = m.id
             WHERE board_id = #{boardId}
-            ORDER BY m.id ASC
+            ORDER BY id 
             """)
     List<Comment> selectAllByBoardId(Integer boardId);
+
+    @Delete("""
+            DELETE FROM comment
+            WHERE id = #{id}
+            """)
+    void deleteById(Integer id);
+
 }
