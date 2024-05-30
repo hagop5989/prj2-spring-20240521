@@ -25,4 +25,16 @@ public class CommentService {
         return mapper.selectAllByBoardId(boardId);
     }
 
+    public boolean validate(Comment comment) {
+        if (comment == null) {
+            return false;
+        }
+        if (comment.getComment().isBlank()) {
+            return false;
+        }
+        if (comment.getBoardId() == null) {
+            return false;
+        }
+        return true;
+    }
 }
