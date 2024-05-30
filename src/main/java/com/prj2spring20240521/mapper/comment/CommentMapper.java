@@ -3,6 +3,9 @@ package com.prj2spring20240521.mapper.comment;
 import com.prj2spring20240521.domain.comment.Comment;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 @Mapper
 public interface CommentMapper {
@@ -15,4 +18,11 @@ public interface CommentMapper {
             """)
     int insert(Comment comment);
 
+    @Select("""
+            SELECT *
+            FROM comment
+            WHERE board_id = #{boardId}
+            ORDER BY id ASC
+            """)
+    List<Comment> selectAllByBoardId(Integer boardId);
 }
