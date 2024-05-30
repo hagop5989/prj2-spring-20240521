@@ -58,10 +58,13 @@ public interface BoardMapper {
 
     @Select("""
             <script>
-            SELECT b.id, 
+            SELECT b.id,
                    b.title,
                    m.nick_name writer,
-                   COUNT(f.name) number_of_images
+                   COUNT(f.name) number_of_images,
+                   (SELECT COUNT(*) 
+                        FROM board_like l 
+                        WHERE l.board_id = b.id) number_of_like
             FROM board b JOIN member m ON b.member_id = m.id
                          LEFT JOIN board_file f ON b.id = f.board_id
                <trim prefix="WHERE" prefixOverrides="OR">
@@ -184,4 +187,5 @@ public interface BoardMapper {
             WHERE member_id=#{memberId}
             """)
     void deleteLikeByMemberId(Integer memberId);
+
 }
