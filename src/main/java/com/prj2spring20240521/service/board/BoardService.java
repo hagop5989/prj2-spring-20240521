@@ -3,6 +3,7 @@ package com.prj2spring20240521.service.board;
 import com.prj2spring20240521.domain.board.Board;
 import com.prj2spring20240521.domain.board.BoardFile;
 import com.prj2spring20240521.mapper.board.BoardMapper;
+import com.prj2spring20240521.mapper.comment.CommentMapper;
 import com.prj2spring20240521.mapper.member.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class BoardService {
     private final BoardMapper mapper;
     private final MemberMapper memberMapper;
+    private final CommentMapper commentMapper;
     final S3Client s3Client;
 
     @Value("${aws.s3.bucket.name}")
@@ -98,9 +100,17 @@ public class BoardService {
         pageInfo.put("lastPageNumber", lastPageNumber);
         pageInfo.put("leftPageNumber", leftPageNumber);
         pageInfo.put("rightPageNumber", rightPageNumber);
+        List<Board> boardList = mapper.selectAllPaging(offset, searchType, keyword);
+        for (Board board : boardList) {
+            int numOfComment = commentMapper.selectAllByBoardId(board.getId()).size();
+            System.out.println("board.getId() = " + board.getId());
+            System.out.println("numOfComment = " + numOfComment);
+            board.setCommentNum(numOfComment);
+        }
+
 
         return Map.of("pageInfo", pageInfo,
-                "boardList", mapper.selectAllPaging(offset, searchType, keyword));
+                "boardList", boardList);
     }
 
     public Map<String, Object> get(Integer id, Authentication authentication) {

@@ -227,3 +227,8 @@ CREATE TABLE comment
 
 SELECT *
 FROM comment;
+
+SELECT *
+FROM comment
+         JOIN member m ON m.id = comment.member_id
+WHERE board_id = 4;
