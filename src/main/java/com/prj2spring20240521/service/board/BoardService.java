@@ -49,7 +49,7 @@ public class BoardService {
                 PutObjectRequest objectRequest = PutObjectRequest.builder()
                         .bucket(bucketName)
                         .key(key)
-                        .acl(ObjectCannedACL.PUBLIC_READ) // 밖에서 읽을 수 있게 설정
+                        .acl(ObjectCannedACL.PUBLIC_READ)
                         .build();
 
                 s3Client.putObject(objectRequest,
@@ -108,17 +108,18 @@ public class BoardService {
 
         Board board = mapper.selectById(id);
         List<String> fileNames = mapper.selectFileNameByBoardId(id);
+        // 버킷객체URL/{id}/{name}
         List<BoardFile> files = fileNames.stream()
                 .map(name -> new BoardFile(name, STR."\{srcPrefix}\{id}/\{name}"))
                 .toList();
+
         board.setFileList(files);
 
         Map<String, Object> like = new HashMap<>();
         if (authentication == null) {
             like.put("like", false);
         } else {
-            String memberId = authentication.getName();
-            int c = mapper.selectLikeByBoardIdAndMemberId(id, memberId);
+            int c = mapper.selectLikeByBoardIdAndMemberId(id, authentication.getName());
             like.put("like", c == 1);
         }
         like.put("count", mapper.selectCountLikeByBoardId(id));
@@ -146,21 +147,22 @@ public class BoardService {
         // board_file
         mapper.deleteFileByBoardId(id);
 
+        // board_like
+        mapper.deleteLikeByBoardId(id);
+
         // board
         mapper.deleteById(id);
     }
 
-    public void edit(Board board, List<String> removeFileList, MultipartFile[] addFileList)
-            throws IOException {
+    public void edit(Board board, List<String> removeFileList, MultipartFile[] addFileList) throws IOException {
         if (removeFileList != null && removeFileList.size() > 0) {
             for (String fileName : removeFileList) {
-                // s3 의 파일 삭제
+                // s3의 파일 삭제
                 String key = STR."prj2/\{board.getId()}/\{fileName}";
                 DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
                         .bucket(bucketName)
                         .key(key)
                         .build();
-
                 s3Client.deleteObject(objectRequest);
 
                 // db records 삭제
@@ -184,8 +186,8 @@ public class BoardService {
                         .acl(ObjectCannedACL.PUBLIC_READ)
                         .build();
 
-                s3Client.putObject(objectRequest,
-                        RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+                s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
             }
         }
 
@@ -206,15 +208,17 @@ public class BoardService {
         Integer boardId = (Integer) req.get("boardId");
         Integer memberId = Integer.valueOf(authentication.getName());
 
-        // 이미 했으면 삭제
+        // 이미 했으면
         int count = mapper.deleteLikeByBoardIdAndMemberId(boardId, memberId);
 
-        // 안 했으면 추가
+        // 안했으면
         if (count == 0) {
             mapper.insertLikeByBoardIdAndMemberId(boardId, memberId);
             result.put("like", true);
         }
+
         result.put("count", mapper.selectCountLikeByBoardId(boardId));
+
         return result;
     }
 }
