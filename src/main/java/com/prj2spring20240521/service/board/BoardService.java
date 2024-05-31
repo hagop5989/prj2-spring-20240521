@@ -160,6 +160,9 @@ public class BoardService {
         // board_like
         mapper.deleteLikeByBoardId(id);
 
+        // comment
+        commentMapper.deleteByBoardId(id);
+
         // board
         mapper.deleteById(id);
     }
