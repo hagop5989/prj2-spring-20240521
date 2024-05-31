@@ -52,4 +52,14 @@ public class CommentService {
         }
         return true;
     }
+
+    public void edit(Comment comment, Integer boardId, Authentication authentication) {
+//        mapper.edit(comment, boardId);
+
+
+    }
+
+    public void update(Comment comment) {
+        mapper.update(comment);
+    }
 }
