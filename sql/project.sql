@@ -232,3 +232,8 @@ SELECT *
 FROM comment
          JOIN member m ON m.id = comment.member_id
 WHERE board_id = 4;
+
+INSERT INTO board
+    (title, content, member_id)
+SELECT title, board.content, member_id
+FROM board;
